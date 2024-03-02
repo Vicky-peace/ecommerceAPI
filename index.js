@@ -6,7 +6,7 @@ import config from './src/db/config.js';
 
 // Routes
 import authRoutes from "./src/Routes/authRoutes.js";
-
+import customerRoutes from "./src/Routes/customerRoutes.js";
 
 
 
@@ -23,6 +23,7 @@ app.use(cors());
 
 //instantiate the routes
 authRoutes(app);
+customerRoutes(app);
 
 app.get('/', (req,res)=>{
     res.sendStatus('Wecome to My Ecommerce API💻')
