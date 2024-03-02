@@ -33,3 +33,55 @@ export const getCustomerById =async (req,res)=>{
        res.status(404).json({message: error.message});
     }
 }
+
+
+//Update customer data
+export const updateCustomer = async (req,res)=>{
+    const {CustomerID} = req.params;
+    const {FirstName, LastName, Email, Password} = req.body;
+    try{
+        //Connect to the database
+        let pool = await sql.connect(config.sql);
+
+        //Execute the UPDATE query
+        let result = await pool.request()
+        .input("CustomerID", sql.Int, CustomerID)
+        .input("FirstName", sql.VarChar, FirstName)
+        .input("LastName", sql.VarChar, LastName)
+        .input("Email", sql.VarChar,Email)
+        .input("Password",sql.Int, Password)
+        .query(
+            `
+            UPDATE Customers 
+            SET 
+            FirstName = @FirstName,
+            LastName = @LastName,
+            Email = @Email,
+            Password = @Password
+            WHERE CustomerID = @CustomerID
+            `
+        );
+
+        //Check if any rows were affected
+        if(result.rowsAffected[0] === 1){
+            //successfull update
+            res.status(200).json({
+                status: 'success',
+                message: 'Customer details updated successfully'
+            });
+        } else{
+            //No rows affected , customer with given ID might not exist
+            res.status(404).json({
+                status: 'error',
+                message: 'Customer not found'
+            });
+        }
+
+    } catch(error){
+      console.log(error)
+      res.status(500).json({
+        status: 'error',
+        message: error.message
+      })
+    }
+}
