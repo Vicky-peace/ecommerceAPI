@@ -43,3 +43,48 @@ export const register = async (req,res) =>{
     sql.close();
   }
 }
+
+// Login the user
+export const login =async(req,res)=>{
+  const {Email, Password} = req.body;
+  try{
+     //Connect to the databse
+     let pool= await sql.connect(config.sql);
+     let result = await pool.request()
+     .input("Email", sql.VarChar, Email)
+     .query("SELECT * FROM Customers WHERE Email=@Email");
+     console.log(result);
+     const user = result.recordset[0];
+     console.log(user);
+     if(!user){
+      res.status(404).json({
+        status: "error",
+        message: "Invalid credentials"
+      });
+     } else{
+      // create a jwt token store
+      let token = `JWT ${jwt.sign(
+        {
+          Email: user.Email,
+          CustomerID: user.CustomerID,
+        },
+        process.env.SECRET,
+        {expiresIn: process.env.EXPIRY}
+      )}`;
+
+      const{CustomerID, Email} = user;
+      res.status(200).json({
+        status: "success",
+        message: "user Logged in successfully",
+        CustomerID: CustomerID,
+        Email: Email,
+        token: token,
+      });
+     }
+  } catch(error){
+   console.log(error);
+   res.status(404).json({message: error})
+  } finally{
+    sql.close();
+  }
+}
