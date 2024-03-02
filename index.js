@@ -1,7 +1,11 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import config from './db/config.js';
+import config from './src/db/config.js';
+
+
+// Routes
+import authRoutes from "./src/Routes/authRoutes.js";
 
 
 
@@ -15,6 +19,10 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
+
+
+//instantiate the routes
+authRoutes(app);
 
 app.get('/', (req,res)=>{
     res.sendStatus('Wecome to My Ecommerce API💻')

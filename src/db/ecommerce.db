@@ -1,3 +1,5 @@
+CREATE DATABASE ecommerce;
+
 -- Create Categories Table
 CREATE TABLE Categories (
     CategoryID INT PRIMARY KEY,
@@ -25,9 +27,8 @@ CREATE TABLE Customers (
     FirstName VARCHAR(255),
     LastName VARCHAR(255),
     Email VARCHAR(255) UNIQUE,
-    Password VARCHAR(255),
-    CreatedDate DATETIME,
-    UpdatedDate DATETIME
+    Password VARCHAR(255)
+   
 );
 
 -- Create Orders Table
