@@ -89,3 +89,47 @@ export const updateCustomer = async (req,res)=>{
       })
     }
 }
+
+export const changePassword = async (req,res) =>{
+    const {Email, Password} = req.body;
+    try{
+       //Connect to the database
+       let pool = await sql.connect(config.sql)
+
+       //Hash the password
+       const hashedPassword = bcrypt.hashSync(Password,10);
+
+       //Execute the Update query to change the password
+       let result = await pool.request()
+       .input("Email",sql.VarChar, Email)
+       .input("Password", sql.VarChar, hashedPassword)
+       .query(
+        `
+        UPDATE Customers 
+        SET Password = @Password
+        WHERE Email = @Email
+        `
+       );
+
+       //Check if any rows were affected
+       if(result.rowsAffected[0] === 1){
+        //The password chage is successfull
+        res.status(200).json({
+            status: 'success',
+            message: 'Password changed successfully'
+        });
+       }else{
+        //No rows affected, customer might not exist
+        res.status(404).json({
+            status: 'error',
+            message: 'Customer not found'
+        })
+       }
+    } catch(error){
+       console.log(error);
+       res.status(500).json({
+        status: 'error',
+        message: error.message,
+       });
+    }
+}
