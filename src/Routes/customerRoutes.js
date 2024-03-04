@@ -1,4 +1,4 @@
-import { getCustomerById,updateCustomer , changePassword} from "../Controllers/customerController.js";
+import { getCustomerById,updateCustomer , changePassword, deleteCustomer} from "../Controllers/customerController.js";
 
 
 const customerRoutes = (app) =>{
@@ -9,5 +9,8 @@ const customerRoutes = (app) =>{
 
     app.route("/api/customers/changePassword")
     .post(changePassword)
+
+    app.route("/api/customers/:CustomerID")
+    .delete(deleteCustomer)
 }
 export default customerRoutes;

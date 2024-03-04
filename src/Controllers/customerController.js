@@ -90,6 +90,9 @@ export const updateCustomer = async (req,res)=>{
     }
 }
 
+
+//Change password
+
 export const changePassword = async (req,res) =>{
     const {Email, Password} = req.body;
     try{
@@ -133,3 +136,40 @@ export const changePassword = async (req,res) =>{
        });
     }
 }
+
+
+// DELETE Customer
+export const deleteCustomer = async (req,res) =>{
+    const {CustomerID} = req.params;
+
+    try{
+        //Connect to the database
+        const pool = await sql.connect(config.sql)
+
+        // Execute the DELETE query
+         const result = await pool.request()
+         .input('CustomerID', sql.Int, CustomerID)
+         .query('DELETE FROM Customers WHERE CustomerID = @CustomerID');
+
+         //Check if any rows were affected
+         if(result.rowsAffected[0] === 1){
+            res.status(200).json({
+                status: 'success',
+                message: "Customer deleted succeddfully",
+            });
+
+         }else{
+            //No rows affected, customer with given ID might not exist
+            res.status(404).json({
+                status: 'error',
+                message: 'Customer not found',
+            });
+         }
+    }catch(error){
+       console.log(error);
+       res.status(500).json({
+        status: 'error',
+        message: error.message,
+       });
+    }
+};
