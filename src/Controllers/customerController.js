@@ -42,14 +42,18 @@ export const updateCustomer = async (req,res)=>{
     try{
         //Connect to the database
         let pool = await sql.connect(config.sql);
+        
 
+
+        //Hash the password if provided
+        const hashedPassword = Password ? bcrypt.hashSync(Password, 10) : undefined;
         //Execute the UPDATE query
         let result = await pool.request()
         .input("CustomerID", sql.Int, CustomerID)
         .input("FirstName", sql.VarChar, FirstName)
         .input("LastName", sql.VarChar, LastName)
         .input("Email", sql.VarChar,Email)
-        .input("Password",sql.Int, Password)
+        .input("Password",sql.VarChar, hashedPassword)
         .query(
             `
             UPDATE Customers 
