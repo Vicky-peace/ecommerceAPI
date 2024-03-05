@@ -25,3 +25,23 @@ export const createCategory = async (req,res) => {
       });
     }
 }
+
+export const getAllcategories = async (req,res) =>{
+    try{
+     const pool = await sql.connect(config.sql);
+     const result = await pool.request()
+     .query(
+        'SELECT * FROM Categories'
+     );
+     res.status(200).json({
+        status: 'success',
+        categories: result.recordset,
+     });
+    } catch(error){
+    console.log(error);
+    res.status(500).json({
+        status: 'error',
+        message: error.message,
+    });
+    }
+};
