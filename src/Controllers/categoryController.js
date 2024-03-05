@@ -26,6 +26,7 @@ export const createCategory = async (req,res) => {
     }
 }
 
+//Get all Categories
 export const getAllcategories = async (req,res) =>{
     try{
      const pool = await sql.connect(config.sql);
@@ -43,5 +44,34 @@ export const getAllcategories = async (req,res) =>{
         status: 'error',
         message: error.message,
     });
+    }
+};
+
+//get Category By ID
+export const getCategoryById = async (req,res) => {
+    const {CategoryID} = req.params;
+    try{
+      const pool = await sql.connect(config.sql);
+      const result = await pool.request()
+      .input('CategoryID', sql.Int, CategoryID)
+      .query('SELECT * FROM Categories WHERE CategoryID = @CategoryID');
+      const category = result.recordset[0];
+      if(!category){
+        res.status(404).json({
+            status: 'error',
+            message: "Category not found",
+        });
+      } else{
+        res.status(200).json({
+            status: 'success',
+             category: category,
+        })
+      }
+    } catch(error){
+       console.log(error)
+       res.status(500).json({
+        status: 'error',
+        message: error.message,
+       });
     }
 };
