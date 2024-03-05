@@ -54,3 +54,25 @@ CREATE TABLE OrderItems (
     FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
     FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
 );
+
+-- Create PaymentMethods Table
+CREATE TABLE PaymentMethods (
+    PaymentMethodID INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Description TEXT,
+    CreatedDate DATETIME DEFAULT GETDATE(),
+    UpdatedDate DATETIME DEFAULT GETDATE()
+);
+
+-- Create Transactions Table
+CREATE TABLE Transactions (
+    TransactionID INT PRIMARY KEY,
+    OrderID INT,
+    Amount DECIMAL(10,2),
+    PaymentMethodID INT,
+    TransactionDate DATETIME,
+    CreatedDate DATETIME DEFAULT GETDATE(),
+    UpdatedDate DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (PaymentMethodID) REFERENCES PaymentMethods(PaymentMethodID)
+);
