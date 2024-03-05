@@ -9,6 +9,7 @@ import authRoutes from "./src/Routes/authRoutes.js";
 import customerRoutes from "./src/Routes/customerRoutes.js";
 import productRoutes from "./src/Routes/productsRoutes.js";
 import categoryRoute from "./src/Routes/categoryRoute.js";
+import orderRoutes from "./src/Routes/orderRoutes.js";
 
 
 
@@ -26,6 +27,7 @@ authRoutes(app);
 customerRoutes(app);
 productRoutes(app);
 categoryRoute(app);
+orderRoutes(app)
 
 app.get('/', (req,res)=>{
     res.sendStatus('Wecome to My Ecommerce API💻')

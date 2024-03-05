@@ -3,15 +3,13 @@ import config from '../db/config.js';
 
 // Create a new category
 export const createCategory = async (req,res) => {
-    const {Name, CreatedDate,UpdatedDate} = req.body;
+    const {Name} = req.body;
     try{
         const pool = await sql.connect(config.sql);
         const result = await pool.request()
         .input('Name', sql.VarChar,Name)
-        .input('CreatedDate', sql.DateTime, CreatedDate)
-        .input('UpdatedDate', sql.DateTime, UpdatedDate)
         .query(
-            'INSERT INTO Categories (Name,CreatedDate,UpdatedDate) VALUES (@Name, @CreatedDate, @UpdatedDate)'
+            'INSERT INTO Categories (Name) VALUES (@Name)'
         );
         res.status(200).json({
             status: 'success',
@@ -80,15 +78,14 @@ export const getCategoryById = async (req,res) => {
 //Update category
 export const updateCategory = async (req,res) =>{
     const {CategoryID} = req.params;
-    const {Name, UpdatedDate} = req.body;
+    const {Name} = req.body;
     try{
        const pool = await sql.connect(config.sql);
        const result = await pool.request()
        .input('CategoryID', sql.Int, CategoryID)
        .input('Name', sql.VarChar, Name)
-       .input('UpdatedDate', sql.DateTime, UpdatedDate)
        .query(
-        'UPDATE Categories SET Name = @Name, UpdatedDate = @UpdatedDate WHERE CategoryID = @CategoryID'
+        'UPDATE Categories SET Name = @Name WHERE CategoryID = @CategoryID'
        );
        if(result.rowsAffected[0] === 1){
         res.status(200).json({

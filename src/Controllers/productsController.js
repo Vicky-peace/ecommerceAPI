@@ -3,7 +3,7 @@ import config from '../db/config.js';
 
 // Create a new product
 export const createProduct = async (req,res) =>{
-    const {Name, Description, Price, Stock, CreatedDate, CategoryID}= req.body;
+    const {Name, Description, Price, Stock, CategoryID}= req.body;
 
     try{
      //Connect to the DB
@@ -13,11 +13,10 @@ export const createProduct = async (req,res) =>{
      .input('Price', sql.Decimal, Price)
      .input('Description', sql.Text, Description)
      .input('Stock', sql.Int, Stock)
-     .input('CreatedDate',sql.DateTime, CreatedDate)
      .input('CategoryID', sql.Int, CategoryID)
      .query(
         `
-        INSERT INTO Products (Name,Description, Price, Stock,CreatedDate,CategoryID) VALUES (@Name, @Description, @Price, @Stock, @CreatedDate,@CategoryID)
+        INSERT INTO Products (Name,Description, Price, Stock,CategoryID) VALUES (@Name, @Description, @Price, @Stock,@CategoryID)
         `
      );
      res.status(201).json({
@@ -85,7 +84,7 @@ export const getProductById = async (req,res) =>{
 //Update product
 export const updateProduct = async (req,res) =>{
     const {ProductID} = req.params;
-    const {Name, Description, Price, Stock, UpdatedDate} = req.body;
+    const {Name, Description, Price, Stock} = req.body;
 
     try{
    const pool = await sql.connect(config.sql)
@@ -95,15 +94,13 @@ export const updateProduct = async (req,res) =>{
    .input('Description', sql.VarChar,Description)
    .input('Price', sql.Decimal,Price)
    .input('Stock', sql.Int, Stock)
-   .input('UpdatedDate', sql.DateTime,UpdatedDate)
    .query(
     `
     UPDATE Products SET
     Name = @Name,
     Description = @Description,
     Price = @Price,
-    Stock = @Stock,
-    UpdatedDate= @UpdatedDate
+    Stock = @Stock
     WHERE ProductID = @ProductID
     `
    );
