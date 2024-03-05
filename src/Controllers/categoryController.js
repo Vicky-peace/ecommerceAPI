@@ -109,3 +109,34 @@ export const updateCategory = async (req,res) =>{
        });
     }
 };
+
+//Delete category by ID
+export const deleteCategory = async (req,res) =>{
+    const {CategoryID} = req.params;
+    try{
+        const pool = await sql.connect(config.sql);
+        const result = await pool.request()
+        .input('CategoryID',sql.Int, CategoryID)
+        .query('DELETE FROM Categories WHERE CategoryID = @CategoryID');
+        
+        if(result.rowsAffected[0] === 1){
+            res.status(200).json({
+                status: 'sucess',
+                message: 'Category deleted successfully',
+            });
+        } else{
+            res.status(404).json({
+                status: 'error',
+                message: "Category not found",
+            })
+        }
+    } catch(error){
+        console.log(error)
+        res.status(404).json({
+            status: error,
+            message: error.message,
+        });
+    } finally{
+        sql.close()
+    }
+};
