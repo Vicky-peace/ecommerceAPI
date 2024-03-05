@@ -1,4 +1,4 @@
-import { createCategory, getAllcategories, getCategoryById } from "../Controllers/categoryController.js";
+import { createCategory, getAllcategories, getCategoryById, updateCategory } from "../Controllers/categoryController.js";
 
  
 
@@ -11,5 +11,9 @@ import { createCategory, getAllcategories, getCategoryById } from "../Controller
 
   app.route('/api/getCategory/:CategoryID')
   .get(getCategoryById)
+
+
+  app.route('/api/update/:CategoryID')
+  .put(updateCategory)
  }
  export default categoryRoute;
